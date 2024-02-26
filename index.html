@@ -1,0 +1,98 @@
+<html>
+<head>
+<style>
+
+* {
+	margin:0;
+	padding:0;
+}
+body {
+	background-color: #cd81fc;
+}
+
+div {
+	width: 100vw;
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+button {
+	display: block;
+	width:50%;
+	padding: 10%;
+	font-size: 2em;
+	margin-top:5%;
+	background-color: #dca7fc;
+	border-color: white;
+	border-style: solid;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+}
+
+p {
+	display: block;
+	color: white;
+	width:70%;
+	height:10%;
+	padding: 10% 0;
+	font-size: 3em;
+	font-style: italic;
+	text-align: justify;
+}
+
+img {
+	display: block;
+	width: 80%;
+	height: auto;
+	margin: 0 25%;
+	align: center;
+	border-radius: 25%
+}
+</style>
+</head>
+
+<body>
+<div>
+<button onclick="loadData()">Сгенерировать милость</button>
+<p id="compliment">Люблю тебя</p>
+<img id="myimg" src='http://*SERVER_IP*/image' width="500px" height="500px">
+</div>
+<script>
+	var myimg;
+	var compliment_p;
+	
+	myimg = document.getElementById('myimg');
+	compliment_p = document.getElementById('compliment');
+	var parent = myimg.parentNode;
+
+	loadData = function() {
+		  tmp_compliment = '';
+		  tmp_src = '';
+		
+		fetch('http://*SERVER_IP*/image')
+				.then(response => response.blob())
+				.then(blob =>{
+					parent.removeChild(myimg);
+					myimg = new Image();
+					myimg.src =  URL.createObjectURL(blob);
+					parent.appendChild(myimg)
+				}
+  			)
+			
+		  fetch('http://*SERVER_IP*/compliment')
+			.then(response => response.json()
+				.then(data => {
+					 compliment_p.innerText =  data['compliment'];
+				}
+				)
+			);
+	
+	}
+
+	loadData();
+</script>
+</body>
+</html>
